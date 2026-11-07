@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { AdminGuard } from './admin.guard';
 import { AuthService } from './auth.service';
 import { CurrentAdmin } from './current-admin.decorator';
@@ -19,10 +18,9 @@ import type { JwtPayload } from './jwt-payload';
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  // პაროლის გამოცნობისგან დაცვა — ლიმიტი იხ. auth.module.ts (ThrottlerModule)
+  // rate limit-ი main.ts-შია (loginRateLimit), რომ /admin/login-საც იგივე დაიცვას
   @Post('login')
   @HttpCode(200)
-  @UseGuards(ThrottlerGuard)
   login(@Body() dto: LoginDto) {
     return this.auth.login(dto);
   }

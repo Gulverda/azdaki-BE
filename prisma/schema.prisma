@@ -7,7 +7,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  // migration-ებისთვის — pooler-ის გვერდის ავლით, პირდაპირი კავშირი (Supabase-ზე პორტი 5432)
+  directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -147,4 +149,23 @@ model AboutPage {
   images    String[]
   videos    String[]
   updatedAt DateTime @updatedAt
+}
+
+// ---------- სერვისული ცხრილები (Vercel-ზე მეხსიერება instance-ებს შორის არ ზიარდება) ----------
+
+// ადმინპანელის session-ები — connect-pg-simple-ის ფორმატი
+model Session {
+  sid    String   @id @db.VarChar
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
+}
+
+// login-ის rate limit-ის მთვლელები — იხ. common/rate-limit/prisma-rate-limit.store.ts
+model RateLimit {
+  key     String   @id
+  hits    Int
+  resetAt DateTime @db.Timestamptz(3)
 }
