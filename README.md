@@ -107,6 +107,3 @@ npm run start:dev
 ```bash
 npx nest g resource events   # ქმნის module, controller, service, dto-ებს
 ```
-#   a z d a k i - B E  
- #   A z d a k i - B E  
- 
