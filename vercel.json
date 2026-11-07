@@ -6,7 +6,7 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 30,
-      "includeFiles": "{dist,admin-bundle,assets,node_modules/adminjs/lib/frontend/assets,node_modules/@adminjs/design-system,node_modules/swagger-ui-dist}/**"
+      "includeFiles": "{dist,admin-bundle,assets,node_modules/adminjs/lib/frontend/assets,node_modules/@adminjs/design-system,node_modules/swagger-ui-dist,node_modules/@rollup/rollup-linux-x64-gnu}/**"
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
