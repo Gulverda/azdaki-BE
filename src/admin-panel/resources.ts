@@ -35,6 +35,8 @@ const NAV = {
 const HIDDEN: PropertyOptions = { isVisible: false };
 const RICH: PropertyOptions = { type: 'richtext' };
 const TEXTAREA: PropertyOptions = { type: 'textarea' };
+// String[] ველები: თითო პუნქტი ცალკე ველია, "დამატება" ღილაკით
+const LIST: PropertyOptions = { type: 'textarea', isArray: true };
 const READONLY: PropertyOptions = {
   isVisible: { list: false, filter: true, show: true, edit: false },
 };
@@ -444,6 +446,10 @@ export async function buildResources(
           foundingEn: TEXTAREA,
           goalsKa: TEXTAREA,
           goalsEn: TEXTAREA,
+          tasksKa: LIST,
+          tasksEn: LIST,
+          achievementsKa: LIST,
+          achievementsEn: LIST,
           updatedAt: READONLY,
         },
         // ერთადერთი გვერდია: ახალს არ ვქმნით და არ ვშლით
