@@ -579,18 +579,10 @@ async function seedGallery(performanceIds: Record<string, number>) {
 }
 
 async function seedAbout() {
-  const data = {
-    ...ABOUT_CONTENT,
-    heroImage: await image('about-hero', 1920, 1080),
-    images: (
-      await Promise.all([1, 2, 3, 4].map((i) => image(`about-${i}`)))
-    ).filter((url): url is string => !!url),
-    videos: ['https://www.youtube.com/watch?v=aqz-KE-bpKQ'],
-  };
   await prisma.aboutPage.upsert({
     where: { id: 1 },
-    create: { id: 1, ...data },
-    update: data,
+    create: { id: 1, ...ABOUT_CONTENT },
+    update: ABOUT_CONTENT,
   });
 }
 

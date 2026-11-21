@@ -160,9 +160,6 @@ model AboutPage {
   tasksEn        String[]
   achievementsKa String[] // "მიღწევები" — სიის პუნქტები
   achievementsEn String[]
-  heroImage      String?
-  images         String[]
-  videos         String[]
   updatedAt      DateTime @updatedAt
 }
 

@@ -93,19 +93,4 @@ export class UpdateAboutDto {
   @IsArray()
   @IsString({ each: true })
   achievementsEn?: string[];
-
-  @IsOptional()
-  @IsString()
-  heroImage?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  images?: string[];
-
-  /** მოკლე ვიდეოები: ატვირთული ფაილები ან YouTube ლინკები */
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  videos?: string[];
 }

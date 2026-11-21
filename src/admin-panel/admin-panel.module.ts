@@ -36,10 +36,15 @@ export async function buildAdminJsOptions(prisma: PrismaService) {
       join(process.cwd(), 'admin-components', name),
     );
   }
+  const dashboard = componentLoader.add(
+    'Dashboard',
+    join(process.cwd(), 'admin-components', 'Dashboard'),
+  );
   return {
     rootPath: '/admin',
     componentLoader,
     resources,
+    dashboard: { component: dashboard },
     branding: {
       companyName: 'Azdaki — ადმინპანელი',
       logo: false as const,

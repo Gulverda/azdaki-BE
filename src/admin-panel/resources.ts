@@ -329,9 +329,6 @@ export async function buildResources(
           foundingEn: TEXTAREA,
           goalsKa: TEXTAREA,
           goalsEn: TEXTAREA,
-          heroImage: HIDDEN,
-          images: HIDDEN,
-          videos: HIDDEN,
           updatedAt: READONLY,
         },
         // ერთადერთი გვერდია: ახალს არ ვქმნით და არ ვშლით
@@ -341,11 +338,6 @@ export async function buildResources(
           bulkDelete: { isAccessible: false },
         },
       },
-      features: [
-        ...upload('heroImage', IMAGE_TYPES),
-        ...upload('images', IMAGE_TYPES, { multiple: true }),
-        ...upload('videos', VIDEO_TYPES, { multiple: true }),
-      ],
     },
     {
       resource: model('Sponsor'),
