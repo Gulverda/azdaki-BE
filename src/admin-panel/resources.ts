@@ -27,7 +27,7 @@ const MAX_FILE_SIZE = 200 * 1024 * 1024;
 const NAV = {
   content: { name: 'კონტენტი', icon: 'FileText' },
   performances: { name: 'სპექტაკლები', icon: 'Film' },
-  team: { name: 'დასი', icon: 'Users' },
+  about: { name: 'ჩვენს შესახებ', icon: 'Users' },
   system: { name: 'სისტემა', icon: 'Settings' },
 };
 
@@ -283,7 +283,7 @@ export async function buildResources(
     {
       resource: model('StaffMember'),
       options: {
-        navigation: NAV.team,
+        navigation: NAV.about,
         sort: { sortBy: 'order', direction: 'asc' },
         listProperties: [
           'photoFile',
@@ -318,11 +318,17 @@ export async function buildResources(
     {
       resource: model('AboutPage'),
       options: {
-        navigation: NAV.content,
-        listProperties: ['titleKa', 'updatedAt'],
+        navigation: NAV.about,
+        listProperties: ['titleKa', 'foundedYear', 'updatedAt'],
         properties: {
-          contentKa: RICH,
-          contentEn: RICH,
+          introKa: TEXTAREA,
+          introEn: TEXTAREA,
+          whoWeAreKa: TEXTAREA,
+          whoWeAreEn: TEXTAREA,
+          foundingKa: TEXTAREA,
+          foundingEn: TEXTAREA,
+          goalsKa: TEXTAREA,
+          goalsEn: TEXTAREA,
           heroImage: HIDDEN,
           images: HIDDEN,
           videos: HIDDEN,
@@ -340,6 +346,16 @@ export async function buildResources(
         ...upload('images', IMAGE_TYPES, { multiple: true }),
         ...upload('videos', VIDEO_TYPES, { multiple: true }),
       ],
+    },
+    {
+      resource: model('Sponsor'),
+      options: {
+        navigation: NAV.about,
+        sort: { sortBy: 'order', direction: 'asc' },
+        listProperties: ['logoFile', 'nameKa', 'url', 'order', 'isActive'],
+        properties: { logo: HIDDEN, ...TIMESTAMPS },
+      },
+      features: upload('logo', IMAGE_TYPES),
     },
     {
       resource: model('Admin'),

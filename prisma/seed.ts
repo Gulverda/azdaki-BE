@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { ABOUT_CONTENT } from './about-content';
 
 const prisma = new PrismaClient();
 
@@ -19,12 +20,7 @@ async function main() {
   await prisma.aboutPage.upsert({
     where: { id: 1 },
     update: {},
-    create: {
-      titleKa: 'ჩვენს შესახებ',
-      titleEn: 'About us',
-      contentKa: '<p>თეატრის შესახებ ტექსტი</p>',
-      contentEn: '<p>About the theatre</p>',
-    },
+    create: { id: 1, ...ABOUT_CONTENT },
   });
 
   console.log(`Seeded admin: ${email}`);

@@ -38,6 +38,7 @@ model News {
 }
 
 enum StaffCategory {
+  ARTISTIC_DIRECTOR
   ACTOR
   DIRECTOR
   ARTISTIC
@@ -139,15 +140,41 @@ model GalleryItem {
 }
 
 // ერთადერთი ჩანაწერი (id = 1) — "ჩვენს შესახებ" გვერდის კონტენტი
+// "ჩვენს შესახებ" → "თეატრის ისტორია" (ერთადერთი ჩანაწერი, id = 1)
 model AboutPage {
-  id        Int      @id @default(1)
-  titleKa   String
-  titleEn   String?
-  contentKa String
-  contentEn String?
-  heroImage String?
-  images    String[]
-  videos    String[]
+  id             Int      @id @default(1)
+  titleKa        String
+  titleEn        String?
+  subtitleKa     String? // მაგ. "ინკლუზიური თეატრი"
+  subtitleEn     String?
+  foundedYear    Int? // badge, მაგ. 2016
+  introKa        String? // შესავალი აბზაცი
+  introEn        String?
+  whoWeAreKa     String? // "ვინ ვართ"
+  whoWeAreEn     String?
+  foundingKa     String? // "დაარსება"
+  foundingEn     String?
+  goalsKa        String? // "მიზნები"
+  goalsEn        String?
+  tasksKa        String[] // "ამოცანები" — სიის პუნქტები
+  tasksEn        String[]
+  achievementsKa String[] // "მიღწევები" — სიის პუნქტები
+  achievementsEn String[]
+  heroImage      String?
+  images         String[]
+  videos         String[]
+  updatedAt      DateTime @updatedAt
+}
+
+model Sponsor {
+  id        Int      @id @default(autoincrement())
+  nameKa    String
+  nameEn    String?
+  logo      String?
+  url       String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 

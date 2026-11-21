@@ -8,6 +8,7 @@
 import { MediaType, PrismaClient, StaffCategory } from '@prisma/client';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { ABOUT_CONTENT } from './about-content';
 
 const prisma = new PrismaClient();
 const UPLOAD_DIR = join(process.cwd(), 'uploads');
@@ -579,12 +580,7 @@ async function seedGallery(performanceIds: Record<string, number>) {
 
 async function seedAbout() {
   const data = {
-    titleKa: 'ჩვენს შესახებ',
-    titleEn: 'About us',
-    contentKa:
-      '<p>თეატრი „აზდაკი“ 2010 წელს დაარსდა ახალგაზრდა მსახიობებისა და რეჟისორების ჯგუფის მიერ. სახელი ბრეხტის „კავკასიური ცარცის წრის“ პერსონაჟს, მოსამართლე აზდაკს ეკუთვნის.</p><p>ჩვენი რეპერტუარი აერთიანებს ქართულ და მსოფლიო კლასიკას და თანამედროვე დრამატურგიას. თეატრს აქვს ორი სცენა — დიდი (350 ადგილი) და მცირე (80 ადგილი) — და მოზარდთა თეატრალური სტუდია.</p>',
-    contentEn:
-      "<p>Azdaki Theatre was founded in 2010 by a group of young actors and directors. It is named after Azdak, the judge from Brecht's The Caucasian Chalk Circle.</p><p>Our repertoire brings together Georgian and world classics alongside contemporary drama. The theatre has two stages, the Main Stage (350 seats) and the Small Stage (80 seats), plus a youth theatre studio.</p>",
+    ...ABOUT_CONTENT,
     heroImage: await image('about-hero', 1920, 1080),
     images: (
       await Promise.all([1, 2, 3, 4].map((i) => image(`about-${i}`)))

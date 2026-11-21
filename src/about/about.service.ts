@@ -8,31 +8,22 @@ const ABOUT_ID = 1;
 export class AboutService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** "ჩვენს შესახებ" — კონტენტი + სპექტაკლები + სტაფი ერთ პასუხში */
+  /**
+   * "ჩვენს შესახებ → თეატრის ისტორია": სექციები + სპონსორები.
+   * დასი (სამხატვრო ხელმძღვანელი, რეჟისორი, მსახიობები, შემოქმედებითი ჯგუფი,
+   * ადმინისტრაცია) ცალკე მოდის: GET /api/staff?category=...
+   */
   async getPage() {
-    const [page, performances, staff] = await this.prisma.$transaction([
+    const [page, sponsors] = await this.prisma.$transaction([
       this.prisma.aboutPage.findUnique({ where: { id: ABOUT_ID } }),
-      this.prisma.performance.findMany({
-        where: { isPublished: true },
-        orderBy: [{ order: 'asc' }, { premiereDate: 'desc' }],
-        select: {
-          id: true,
-          slug: true,
-          titleKa: true,
-          titleEn: true,
-          shortDescriptionKa: true,
-          shortDescriptionEn: true,
-          coverImage: true,
-        },
-      }),
-      this.prisma.staffMember.findMany({
+      this.prisma.sponsor.findMany({
         where: { isActive: true },
         orderBy: [{ order: 'asc' }, { id: 'asc' }],
-        omit: { bioKa: true, bioEn: true },
+        select: { id: true, nameKa: true, nameEn: true, logo: true, url: true },
       }),
     ]);
     if (!page) throw new NotFoundException('About page is not set up yet');
-    return { ...page, performances, staff };
+    return { ...page, sponsors };
   }
 
   findRaw() {

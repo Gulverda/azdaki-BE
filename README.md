@@ -82,7 +82,7 @@ npm run start:dev
 | GET    | `/api/gallery?type=IMAGE`  | გალერეა (`IMAGE` / `VIDEO`, `performanceId` ფილტრი)                    |
 | GET    | `/api/staff?category=ACTOR` | დასი / სტაფი                                                          |
 | GET    | `/api/staff/:id`           | მსახიობის გვერდი + მისი სპექტაკლები                                   |
-| GET    | `/api/about`               | ჩვენს შესახებ: ტექსტი, ფოტოები, ვიდეოები, სპექტაკლები, სტაფი          |
+| GET    | `/api/about`               | თეატრის ისტორია: სექციები, ფოტოები, ვიდეოები, სპონსორები            |
 
 ### ადმინი (`Authorization: Bearer <token>`)
 

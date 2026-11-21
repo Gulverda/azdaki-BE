@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 import { Pool } from 'pg';
+import { join } from 'node:path';
 import { PrismaService } from '../prisma/prisma.service';
 import { buildResources } from './resources';
 import { translations } from './translations';
@@ -26,10 +27,19 @@ async function loadAdminJs() {
 export async function buildAdminJsOptions(prisma: PrismaService) {
   const { ComponentLoader } = await loadAdminJs();
   const componentLoader = new ComponentLoader();
+  const resources = await buildResources(prisma, componentLoader);
+  // @adminjs/upload-ის show/list კომპონენტები multiple ველზე კრაშავს — ვცვლით საკუთარით.
+  // ფაილები Vercel-ზეც უნდა არსებობდეს (vercel.json → includeFiles), AdminJS მათ გაშვებისას ამოწმებს.
+  for (const name of ['UploadShowComponent', 'UploadListComponent']) {
+    componentLoader.override(
+      name,
+      join(process.cwd(), 'admin-components', name),
+    );
+  }
   return {
     rootPath: '/admin',
     componentLoader,
-    resources: await buildResources(prisma, componentLoader),
+    resources,
     branding: {
       companyName: 'Azdaki — ადმინპანელი',
       logo: false as const,
