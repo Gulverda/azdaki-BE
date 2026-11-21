@@ -199,6 +199,116 @@ export async function buildResources(
     return request;
   };
 
+  /**
+   * სპექტაკლის ფორმაში ჩაშენებული განრიგი: virtual ველი `schedule` (JSON სტრიქონი).
+   * შენახვისას სპექტაკლის ჩვენებები მთლიანად ჩანაცვლდება ფორმაში მოცემულით.
+   */
+  type ShowtimeRow = {
+    startsAt: string;
+    venueKa?: string | null;
+    venueEn?: string | null;
+    ticketUrl?: string | null;
+  };
+  type RecordResponse = {
+    record?: { params: Record<string, unknown>; errors?: object };
+  };
+  const SHOWTIMES = 'schedule'; // არა 'showtimes': ეს სახელი Prisma-ს relation-ს ემთხვევა
+  const SHOWTIMES_CONTEXT = 'azdaki-showtimes';
+  const clean = (value?: string | null) => value?.trim() || null;
+
+  const loadShowtimes = async (performanceId: number) =>
+    JSON.stringify(
+      await prisma.showtime.findMany({
+        where: { performanceId },
+        orderBy: { startsAt: 'asc' },
+        select: {
+          id: true,
+          startsAt: true,
+          venueKa: true,
+          venueEn: true,
+          ticketUrl: true,
+        },
+      }),
+    );
+
+  const showtimesBefore = (request: ActionRequest, context: ActionContext) => {
+    const { payload, method } = request;
+    if (method !== 'post' || !payload || !(SHOWTIMES in payload)) {
+      return request;
+    }
+
+    let rows: ShowtimeRow[];
+    try {
+      rows = JSON.parse(String(payload[SHOWTIMES] || '[]')) as ShowtimeRow[];
+    } catch {
+      rows = [];
+    }
+    delete payload[SHOWTIMES]; // ბაზაში ასეთი სვეტი არ არის
+
+    if (rows.some((row) => Number.isNaN(Date.parse(row.startsAt)))) {
+      throw new ValidationError({
+        [SHOWTIMES]: { message: 'ყველა ჩვენებას თარიღი და დრო სჭირდება' },
+      });
+    }
+    context[SHOWTIMES_CONTEXT] = rows;
+    return request;
+  };
+
+  const showtimesAfter = async (
+    response: RecordResponse,
+    request: ActionRequest,
+    context: ActionContext,
+  ) => {
+    const record = response.record;
+    const id = Number(record?.params.id);
+    if (!record || !id) return response;
+
+    const rows = context[SHOWTIMES_CONTEXT] as ShowtimeRow[] | undefined;
+    const saved =
+      request.method === 'post' && !Object.keys(record.errors ?? {}).length;
+    if (saved && rows) {
+      await prisma.$transaction([
+        prisma.showtime.deleteMany({ where: { performanceId: id } }),
+        prisma.showtime.createMany({
+          data: rows.map((row) => ({
+            performanceId: id,
+            startsAt: new Date(row.startsAt),
+            venueKa: clean(row.venueKa),
+            venueEn: clean(row.venueEn),
+            ticketUrl: clean(row.ticketUrl),
+          })),
+        }),
+      ]);
+    }
+    record.params[SHOWTIMES] = await loadShowtimes(id);
+    return response;
+  };
+
+  const showtimesFeature = buildFeature({
+    properties: {
+      [SHOWTIMES]: {
+        type: 'string',
+        position: 1000, // ფორმის ბოლოში
+        isVisible: { list: false, filter: false, show: true, edit: true },
+        components: {
+          edit: componentLoader.add(
+            'ShowtimesEdit',
+            join(process.cwd(), 'admin-components', 'ShowtimesEdit'),
+          ),
+          show: componentLoader.add(
+            'ShowtimesShow',
+            join(process.cwd(), 'admin-components', 'ShowtimesShow'),
+          ),
+        },
+      },
+    },
+    actions: {
+      new: { before: showtimesBefore, after: showtimesAfter },
+      edit: { before: showtimesBefore, after: showtimesAfter },
+      show: { after: showtimesAfter },
+    },
+  });
+
   return [
     {
       resource: model('News'),
@@ -254,7 +364,7 @@ export async function buildResources(
           edit: { before: slugHook(performanceSlugTaken) },
         },
       },
-      features: upload('coverImage', IMAGE_TYPES),
+      features: [...upload('coverImage', IMAGE_TYPES), showtimesFeature],
     },
     {
       resource: model('PerformanceImage'),

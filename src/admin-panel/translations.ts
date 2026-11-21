@@ -14,6 +14,7 @@ export const translations = {
   },
   properties: {
     id: 'ID',
+    schedule: 'განრიგი (ჩვენებები)',
     slug: 'Slug (URL)',
     titleKa: 'სათაური (ქართ.)',
     titleEn: 'Title (EN)',
