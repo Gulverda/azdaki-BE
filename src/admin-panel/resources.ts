@@ -313,6 +313,7 @@ export async function buildResources(
     {
       resource: model('News'),
       options: {
+        titleProperty: 'titleKa',
         navigation: NAV.content,
         sort: { sortBy: 'createdAt', direction: 'desc' },
         listProperties: [
@@ -340,6 +341,7 @@ export async function buildResources(
     {
       resource: model('Performance'),
       options: {
+        titleProperty: 'titleKa',
         navigation: NAV.performances,
         sort: { sortBy: 'order', direction: 'asc' },
         listProperties: [
@@ -393,6 +395,7 @@ export async function buildResources(
     {
       resource: model('StaffMember'),
       options: {
+        titleProperty: 'nameKa',
         navigation: NAV.about,
         sort: { sortBy: 'order', direction: 'asc' },
         listProperties: [
@@ -415,6 +418,7 @@ export async function buildResources(
     {
       resource: model('GalleryItem'),
       options: {
+        titleProperty: 'titleKa',
         navigation: NAV.content,
         sort: { sortBy: 'createdAt', direction: 'desc' },
         listProperties: ['urlFile', 'type', 'titleKa', 'performance', 'order'],
@@ -428,6 +432,7 @@ export async function buildResources(
     {
       resource: model('AboutPage'),
       options: {
+        titleProperty: 'titleKa',
         navigation: NAV.about,
         listProperties: ['titleKa', 'foundedYear', 'updatedAt'],
         properties: {
@@ -452,6 +457,7 @@ export async function buildResources(
     {
       resource: model('Sponsor'),
       options: {
+        titleProperty: 'nameKa',
         navigation: NAV.about,
         sort: { sortBy: 'order', direction: 'asc' },
         listProperties: ['logoFile', 'nameKa', 'url', 'order', 'isActive'],
@@ -462,6 +468,7 @@ export async function buildResources(
     {
       resource: model('Admin'),
       options: {
+        titleProperty: 'email',
         navigation: NAV.system,
         listProperties: ['email', 'createdAt'],
         properties: {
